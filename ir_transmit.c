@@ -96,15 +96,26 @@ void blink() {
 int main(void) {
   DDRD |= (1 << IR_LED_PORT);  //set the IR port pin to output
 
-  if(PIND & (1<<FREQUENCY_SELECT)) {
-    set_frequency_56();
+  if(!(PIND & (1<<FREQUENCY_SELECT))) {
+    set_frequency_56;
     blink();
     blink();
   } else {
     set_frequency_38();
     blink();
   }
+  char command;
   while(1) {
+    command=PINB;
+    //returns true for either arm moving button pressed
+    if(!(command & ((1<<PB5)|(1<<PB4)))) {
+      if(!(command & (1<<PB5)) {
+        //send command to move arm down
+      } else {
+        //send command to move arm up
+      }
+      break;
+    }
     send_start_bit();
     send_command(18); //send code for Volume up 
     _delay_ms(100);   //send no more than 1 command every 100ms
