@@ -15,6 +15,14 @@
 #define HIGH_US_56KHZ 8
 #define LOW_US_56KHZ 10
 
+#define BUTTON1 PB1
+#define BUTTON2 PB2
+#define BUTTON3 PB3
+#define BUTTON4 PB4
+#define BUTTON5 PB5
+
+#define CONTROL_PORT PORTB
+
 //Global variables for switching carrier frequencies
 //Variables are global for timing correctness
 unsigned char loop_count;
@@ -106,16 +114,40 @@ int main(void) {
   }
   char command;
   while(1) {
-    command=PINB;
+    command=CONTROL_PORT;
     //returns true for either arm moving button pressed
-    if(!(command & ((1<<PB5)|(1<<PB4)))) {
-      if(!(command & (1<<PB5)) {
+    if(!(command & ((1<<BUTTON5)|(1<<BUTTON4)))) {
+      if(!(command & (1<<BUTTON5))) {
         //send command to move arm down
       } else {
         //send command to move arm up
       }
       break;
+    } else if (!(command & ((1<<BUTTON1) | (1<<BUTTON2)))) {
+      switch(~(command & (1<<BUTTON1) | (1<<BUTTON2))) {
+        case (1<<BUTTON1):
+	  if(!(command & (1<<BUTTON3))) {
+	    //move left motor in reverse
+	  } else {
+	    //move left motor forwards
+	  };
+	  break;
+	case (1<<BUTTON2):
+	  if(!(command & (1<<BUTTON3))) {
+	    //move right motor in reverse
+	  } else {
+	    //move right motor forwards
+	  }
+	  break;
+	case (1<<BUTTON1) | (1<<BUTTON2): 
+	  if(!(command & (1<<BUTTON3))) {
+	    //move both in reverse
+	  } else {
+	    //move both backwards
+	  }
+      }
     }
+
     send_start_bit();
     send_command(18); //send code for Volume up 
     _delay_ms(100);   //send no more than 1 command every 100ms
