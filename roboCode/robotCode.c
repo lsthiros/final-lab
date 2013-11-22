@@ -18,6 +18,8 @@ volatile char currentEvent=0;
 				//current motor
 volatile int timeDelay[NUMBER_OF_EVENTS];
 
+volatile uint32_t msPassed=0;
+
 void initialize_motor_variables(void)
 {
 	////////initialization////////
@@ -178,6 +180,11 @@ ISR(TIMER1_COMPA_vect)
 		//time padding-         20 ms -    3 ms   * number of motors
 		OCR1A += 28000;// ( (20000*2) - ((3000*2) * NUMBER_OF_MOTORS));
 		currentEvent=0;//go back to the beginning
+		msPassed+=20;
+		if(msPassed>=120000)//2 minutes have passed
+		{
+			while(1){}
+		}
 	}
 }
 
@@ -186,15 +193,15 @@ int main(void)
 	initialize_motor_variables();
 	initialize_adc();
 	DDRB |= (1<<5);
-	//lab4_initialize_timer0();
-	//volatile char remoteData=0;
+	lab4_initialize_timer0();
+	volatile char remoteData=0;
 	initialize_timer();//this goes last so we don't have to worry about
 	//being interrupted during initialization.
 	set_motor_speed(1,100);
 	set_motor_speed(0,-50);
 	while(1)
 	{
-		/*remoteData=getRemoteData();
+		remoteData=getRemoteData();
 		if(remoteData==16)//turn
 		{
 			set_motor_speed(0,-50);
@@ -220,7 +227,7 @@ int main(void)
 		{
 			set_motor_speed(0,0);
 			set_motor_speed(1,0);
-		}*/
+		}
 
 	}
 	return 0;
