@@ -8,7 +8,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define NUMBER_OF_MOTORS 2
+#define NUMBER_OF_MOTORS 3
 #define NUMBER_OF_EVENTS NUMBER_OF_MOTORS*2
 volatile char motorOn[NUMBER_OF_MOTORS];
 
@@ -178,7 +178,7 @@ ISR(TIMER1_COMPA_vect)
 	       //event in the order
 	{
 		//time padding-         20 ms -    3 ms   * number of motors
-		OCR1A += 28000;// ( (20000*2) - ((3000*2) * NUMBER_OF_MOTORS));
+		OCR1A += 22000;// ( (20000*2) - ((3000*2) * NUMBER_OF_MOTORS));
 		currentEvent=0;//go back to the beginning
 		msPassed+=20;
 		if(msPassed>=120000)//2 minutes have passed
@@ -202,33 +202,50 @@ int main(void)
 	while(1)
 	{
 		remoteData=getRemoteData();
-		if(remoteData==16)//turn
-		{
-			set_motor_speed(0,-50);
-			set_motor_speed(1,10);
-		}
-		if(remoteData==17)//turn
-		{		
-			set_motor_speed(0,50);
-			set_motor_speed(1,-10);
-		}
-		if(remoteData==18)//forwards speed
-		{
-
-			set_motor_speed(0,100);
-			set_motor_speed(1,20);
-		}	
-		if(remoteData==19)//backwards
-		{
-			set_motor_speed(0,-100);
-			set_motor_speed(1,-20);
-		}
-		if(remoteData==20)
+		if(remoteData==101)//stop evrythng
 		{
 			set_motor_speed(0,0);
 			set_motor_speed(1,0);
 		}
+		if(remoteData==102)//right backwards
+		{		
+			set_motor_speed(0,-100);
+			set_motor_speed(1,0);
+		}
+		if(remoteData==103)//left backwards
+		{
 
+			set_motor_speed(0,0);
+			set_motor_speed(1,-100);
+		}	
+		if(remoteData==104)//both backwards
+		{
+			set_motor_speed(0,-100);
+			set_motor_speed(1,-100);
+		}
+		if(remoteData==105)//right forwards
+		{
+			set_motor_speed(0,100);
+			set_motor_speed(1,0);
+		}
+		if(remoteData==106)//left forwards
+		{
+			set_motor_speed(0,0);
+			set_motor_speed(1,100);
+		}
+		if(remoteData==107)//both forwards
+		{
+			set_motor_speed(0,100);
+			set_motor_speed(1,100);
+		}
+		if(remoteData==109)//arm up
+		{
+			set_motor_speed(2,100);
+		}
+		if(remoteData==110)//arm down
+		{
+			set_motor_speed(2,-100);
+		}
 	}
 	return 0;
 }
