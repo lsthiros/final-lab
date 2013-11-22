@@ -1,4 +1,4 @@
-//Michael Ebert and Leia Chang
+//Michael Ebert, et al
 //
 //Lab 4 part 2
 //
@@ -18,7 +18,7 @@ volatile char currentEvent=0;
 				//current motor
 volatile int timeDelay[NUMBER_OF_EVENTS];
 
-void initialize_variables(void)
+void initialize_motor_variables(void)
 {
 	////////initialization////////
 	DDRB |= (1<<0);//motor 1 port to output
@@ -163,6 +163,7 @@ char getRemoteData()
 
 
 
+
 //Events always go in the same order - motor1 on, 1off, motor2on, 2off,etc.
 ISR(TIMER1_COMPA_vect)
 {
@@ -182,18 +183,18 @@ ISR(TIMER1_COMPA_vect)
 
 int main(void)
 {
-	initialize_variables();
+	initialize_motor_variables();
 	initialize_adc();
 	DDRB |= (1<<5);
-	lab4_initialize_timer0();
-	volatile char remoteData=0;
+	//lab4_initialize_timer0();
+	//volatile char remoteData=0;
 	initialize_timer();//this goes last so we don't have to worry about
 	//being interrupted during initialization.
-	set_motor_speed(1,10);
-	set_motor_speed(0,-10);
+	set_motor_speed(1,100);
+	set_motor_speed(0,-50);
 	while(1)
 	{
-		remoteData=getRemoteData();
+		/*remoteData=getRemoteData();
 		if(remoteData==16)//turn
 		{
 			set_motor_speed(0,-50);
@@ -219,7 +220,7 @@ int main(void)
 		{
 			set_motor_speed(0,0);
 			set_motor_speed(1,0);
-		}
+		}*/
 
 	}
 	return 0;
