@@ -15,6 +15,9 @@
 #define HIGH_US_56KHZ 8
 #define LOW_US_56KHZ 10
 
+#define FREQUENCY_SELECT PD2
+#define DEBUG_LED PD7
+
 #define BUTTON1 PB1
 #define BUTTON2 PB2
 #define BUTTON3 PB3
@@ -102,7 +105,7 @@ void blink() {
 }
 
 int main(void) {
-  DDRD |= (1 << IR_LED_PORT);  //set the IR port pin to output
+  DDRD |= (1 << IR_LED_PORT) | (1 << FREQUENCY_SELECT);  //set the IR port pin to output
 
   if(!(PIND & (1<<FREQUENCY_SELECT))) {
     set_frequency_56;
@@ -119,8 +122,12 @@ int main(void) {
     if(!(command & ((1<<BUTTON5)|(1<<BUTTON4)))) {
       if(!(command & (1<<BUTTON5))) {
         //send command to move arm down
+        send_start_bit();
+        send_command(110);
       } else {
         //send command to move arm up
+	send_start_bit();
+	send_command(109);
       }
       break;
     } else if (!(command & ((1<<BUTTON1) | (1<<BUTTON2)))) {
@@ -128,29 +135,37 @@ int main(void) {
         case (1<<BUTTON1):
 	  if(!(command & (1<<BUTTON3))) {
 	    //move left motor in reverse
+	    send_start_bit();
+	    send_command(103);
 	  } else {
 	    //move left motor forwards
+	    send_start_bit();
+	    send_command(106);
 	  };
 	  break;
 	case (1<<BUTTON2):
 	  if(!(command & (1<<BUTTON3))) {
 	    //move right motor in reverse
+	    send_start_bit();
+	    send_command(102);
 	  } else {
 	    //move right motor forwards
+	    send_start_bit();
+	    send_command(105);
 	  }
 	  break;
 	case (1<<BUTTON1) | (1<<BUTTON2): 
 	  if(!(command & (1<<BUTTON3))) {
 	    //move both in reverse
+	    send_start_bit();
+	    send_command(107);
 	  } else {
 	    //move both backwards
+	    send_start_bit();
+	    send_command(104);
 	  }
       }
     }
-
-    send_start_bit();
-    send_command(18); //send code for Volume up 
-    _delay_ms(100);   //send no more than 1 command every 100ms
   }
 
   return 0;
