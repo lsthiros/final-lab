@@ -99,16 +99,18 @@ void send_command(unsigned char command) {
 }
 
 void blink() {
-  PORTB |= (1<<DEBUG_LED);
+  PORTD |= (1<<DEBUG_LED);
   _delay_ms(300);
-  PORTB &= ~(1<<DEBUG_LED);
+  PORTD &= ~(1<<DEBUG_LED);
+  _delay_ms(300);
 }
 
 int main(void) {
-  DDRD |= (1 << IR_LED_PORT) | (1 << FREQUENCY_SELECT);  //set the IR port pin to output
+  DDRD |= (1<<DEBUG_LED) | (1 << IR_LED_PORT);  //set the IR port pin to output
+  PORTB |= (1<<BUTTON5) | (1<<BUTTON4) | (1<<BUTTON3) | (1<<BUTTON2) | (1<<BUTTON1);
 
   if(!(PIND & (1<<FREQUENCY_SELECT))) {
-    set_frequency_56;
+    set_frequency_56();
     blink();
     blink();
   } else {
@@ -116,10 +118,12 @@ int main(void) {
     blink();
   }
   char command;
+  
   while(1) {
     command=CONTROL_PORT;
     //returns true for either arm moving button pressed
-    if(!(command & ((1<<BUTTON5)|(1<<BUTTON4)))) {
+    if((command & (1<<BUTTON4)) == 0 || !(command & (1<<BUTTON5))) {
+      blink();
       if(!(command & (1<<BUTTON5))) {
         //send command to move arm down
         send_start_bit();
