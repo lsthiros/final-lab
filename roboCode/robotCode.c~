@@ -178,7 +178,7 @@ ISR(TIMER1_COMPA_vect)
 	       //event in the order
 	{
 		//time padding-         20 ms -    3 ms   * number of motors
-		OCR1A += 28000;// ( (20000*2) - ((3000*2) * NUMBER_OF_MOTORS));
+		OCR1A += 22000;// ( (20000*2) - ((3000*2) * NUMBER_OF_MOTORS));
 		currentEvent=0;//go back to the beginning
 		msPassed+=20;
 		if(msPassed>=120000)//2 minutes have passed
@@ -197,41 +197,35 @@ int main(void)
 	volatile char remoteData=0;
 	initialize_timer();//this goes last so we don't have to worry about
 	//being interrupted during initialization.
-	set_motor_speed(1,100);
-	set_motor_speed(0,-50);
+	set_motor_speed(1,0);
+	set_motor_speed(0,0);
 	while(1)
 	{
 		remoteData=getRemoteData();
-		if(remoteData==101)//stop evrythng
+		if(remoteData==16)//Left Forwards
 		{
-			set_motor_speed(0,0);
-			set_motor_speed(1,0);
+			set_motor_speed(0,100);
 		}
-		if(remoteData==102)//right backwards
+		if(remoteData==17)//left backwards
 		{		
 			set_motor_speed(0,-100);
-			set_motor_speed(1,0);
 		}
-		if(remoteData==103)//left backwards
+		if(remoteData==18)//left stop
 		{
 
 			set_motor_speed(0,0);
+		}	
+		if(remoteData==19)//right forwards
+		{
+			set_motor_speed(1,100);
+		}
+		if(remoteData==20)//right backwards
+		{
 			set_motor_speed(1,-100);
 		}	
-		if(remoteData==104)//both backwards
+		if(remoteData==106)//right stop
 		{
-			set_motor_speed(0,-100);
-			set_motor_speed(1,-100);
-		}
-		if(remoteData==105)//right forwards
-		{
-			set_motor_speed(0,100);
 			set_motor_speed(1,0);
-		}
-		if(remoteData==106)//left forwards
-		{
-			set_motor_speed(0,0);
-			set_motor_speed(1,100);
 		}
 		if(remoteData==107)//both forwards
 		{

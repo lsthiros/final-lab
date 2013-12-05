@@ -197,41 +197,35 @@ int main(void)
 	volatile char remoteData=0;
 	initialize_timer();//this goes last so we don't have to worry about
 	//being interrupted during initialization.
-	set_motor_speed(1,100);
-	set_motor_speed(0,-50);
+	set_motor_speed(1,0);
+	set_motor_speed(0,0);
 	while(1)
 	{
 		remoteData=getRemoteData();
-		if(remoteData==101)//stop evrythng
+		if(remoteData==101)//Left Forwards
 		{
-			set_motor_speed(0,0);
-			set_motor_speed(1,0);
+			set_motor_speed(0,100);
 		}
-		if(remoteData==102)//right backwards
+		if(remoteData==102)//left backwards
 		{		
 			set_motor_speed(0,-100);
-			set_motor_speed(1,0);
 		}
-		if(remoteData==103)//left backwards
+		if(remoteData==103)//left stop
 		{
 
 			set_motor_speed(0,0);
+		}	
+		if(remoteData==104)//right forwards
+		{
+			set_motor_speed(1,100);
+		}
+		if(remoteData==105)//right backwards
+		{
 			set_motor_speed(1,-100);
 		}	
-		if(remoteData==104)//both backwards
+		if(remoteData==106)//right stop
 		{
-			set_motor_speed(0,-100);
-			set_motor_speed(1,-100);
-		}
-		if(remoteData==105)//right forwards
-		{
-			set_motor_speed(0,100);
 			set_motor_speed(1,0);
-		}
-		if(remoteData==106)//left forwards
-		{
-			set_motor_speed(0,0);
-			set_motor_speed(1,100);
 		}
 		if(remoteData==107)//both forwards
 		{

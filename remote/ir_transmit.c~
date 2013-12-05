@@ -168,23 +168,24 @@ int main(void) {
 		if(B1_DOWN)
 		{
 			//send_start_bit();
-			send_command(101);
+			send_command(16);
 		}
 		if(B2_DOWN)
 		{
-			send_command(102);
+			send_command(17);
 		}
 		if(B1_UP && B2_UP)
 		{
-			send_command(103);
+			PORTD &= ~(1<<DEBUG_LED);
+			send_command(18);
 		}
 		if(B3_DOWN)
 		{
-			send_command(104);
+			send_command(19);
 		}
 		if(B4_DOWN)
 		{
-			send_command(105);
+			send_command(20);
 		}
 		if(B3_UP && B4_UP)
 		{
