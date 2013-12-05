@@ -18,11 +18,11 @@
 #define FREQUENCY_SELECT PD2
 #define DEBUG_LED PD7
 
-#define BUTTON1 PB1
-#define BUTTON2 PB2
-#define BUTTON3 PB3
-#define BUTTON4 PB4
-#define BUTTON5 PB5
+#define BUTTON1 PB0
+#define BUTTON2 PB1
+#define BUTTON3 PB2
+#define BUTTON4 PB3
+#define BUTTON5 PB4
 
 #define CONTROL_PORT PORTB
 
@@ -69,33 +69,34 @@ void send_start_bit() {
 }
 
 void send_command(unsigned char command) {
-  char i,j,delay;
+	send_start_bit();
+	char i,j,delay;
 
-  for (i=0;i<8;i++) {  //run 8 times
-    if ((command & (1 << i)) != 0) {
-      delay = logic_one_delay;
-    } else {
-      delay = logic_zero_delay;
-    }
+	for (i=0;i<8;i++) {  //run 8 times
+		if ((command & (1 << i)) != 0) {
+			delay = logic_one_delay;
+		} else {
+			delay = logic_zero_delay;
+		}
 
-    for (j=0;j<delay;j++) {
-      PORTD |= (1 << IR_LED_PORT); //turn on the IR LED
-      if (frequency == 38) {
-        _delay_us(HIGH_US_38KHZ);
-      } else {
-        _delay_us(HIGH_US_56KHZ);
-      }
+		for (j=0;j<delay;j++) {
+			PORTD |= (1 << IR_LED_PORT); //turn on the IR LED
+			if (frequency == 38) {
+				_delay_us(HIGH_US_38KHZ);
+			} else {
+				_delay_us(HIGH_US_56KHZ);
+			}
 
-      PORTD &= ~(1 << IR_LED_PORT);  //turn off the IR LED
-      if (frequency == 38) {
-        _delay_us(LOW_US_38KHZ);
-      } else {
-        _delay_us(LOW_US_56KHZ);
-      }
-    }
+			PORTD &= ~(1 << IR_LED_PORT);  //turn off the IR LED
+			if (frequency == 38) {
+				_delay_us(LOW_US_38KHZ);
+			} else {
+				_delay_us(LOW_US_56KHZ);
+			}
+		}
 
-    _delay_us(600);
-  }
+		_delay_us(600);
+	}
 }
 
 void blink() {
@@ -105,26 +106,116 @@ void blink() {
   _delay_ms(300);
 }
 
-int main(void) {
-  DDRD |= (1<<DEBUG_LED) | (1 << IR_LED_PORT);  //set the IR port pin to output
-  PORTB |= (1<<BUTTON5) | (1<<BUTTON4) | (1<<BUTTON3) | (1<<BUTTON2) | (1<<BUTTON1);
+/*int main(void)
+{
+	DDRB &= ~(1<<0);
+	DDRD |= (1<<7);
+	PORTB |= (1<<0);
+	PORTD |= (1<<7);//turn led on
+	while(1)
+	{
+		if(PINB & (1<<0))
+		{
+			PORTD |= (1<<7);
+		}
+		else
+		{
+			PORTD &= ~(1<<7);
+		}
+	}
+	return 0;
+}*/
+	
 
-  if(!(PIND & (1<<FREQUENCY_SELECT))) {
-    set_frequency_56();
-    blink();
-    blink();
-  } else {
-    set_frequency_38();
-    blink();
-  }
-  char command;
-  
-  while(1) {
-    command=CONTROL_PORT;
+
+int main(void) {
+	DDRD |= (1<<DEBUG_LED) | (1 << IR_LED_PORT);  //set the IR port pin to output
+	PORTB |= (1<<BUTTON5) | (1<<BUTTON4) | (1<<BUTTON3) | (1<<BUTTON2) | (1<<BUTTON1);
+
+	if(!(PIND & (1<<FREQUENCY_SELECT))) {
+		set_frequency_56();
+		blink();
+		blink();
+	} else {
+		set_frequency_38();
+		blink();
+	}
+	char command;
+	/*while(1)
+	  {
+	  if(PINB & (1<<0))
+	  {
+	  PORTD |= (1<<DEBUG_LED);
+	  }
+	  else
+	  {
+	  PORTD &= ~(1<<DEBUG_LED);
+	  }
+	  }
+	  return 0;
+	  }*/
+
+	
+//command scheme:
+//B1down: Left forwards
+//B2down: left backwards
+//b1up&b2up: left stop
+//B3down: right forwards
+//b4down: right bakwards
+//b3&b4up: right stop
+//b5down: 3 down
+//b5 up: 3 up
+#define B1_UP (PINB & (1<<BUTTON1))
+#define B1_DOWN !B1_UP
+#define B2_UP (PINB & (1<<BUTTON2))
+#define B2_DOWN !B2_UP
+#define B3_UP (PINB & (1<<BUTTON3))
+#define B3_DOWN !B3_UP
+#define B4_UP (PINB & (1<<BUTTON4))
+#define B4_DOWN !B4_UP
+#define B5_UP (PINB & (1<<BUTTON5))
+#define B5_DOWN !B5_UP
+
+
+	while(1)
+{
+		if(B1_DOWN)
+		{
+			PORTD |= (1<<DEBUG_LED);
+			send_command(101);
+		}
+		if(B2_DOWN)
+		{
+			PORTD &= ~(1<<DEBUG_LED);
+			send_command(102);
+		}
+		if(B1_UP && B2_UP)
+		{
+			send_command(103);
+		}
+		if(B3_DOWN)
+		{
+			send_command(104);
+		}
+		if(B4_DOWN)
+		{
+			send_command(105);
+		}
+		if(B3_UP && B4_UP)
+		{
+			send_command(106);
+		}
+	}
+return 0;
+}
+
+
+ /* while(1) {
+    CONTROL_PORT=CONTROL_PORT;
     //returns true for either arm moving button pressed
-    if((command & (1<<BUTTON4)) == 0 || !(command & (1<<BUTTON5))) {
+    if((CONTROL_PORT & (1<<BUTTON4)) == 0 || !(CONTROL_PORT & (1<<BUTTON5))) {
       blink();
-      if(!(command & (1<<BUTTON5))) {
+      if(!(CONTROL_PORT & (1<<BUTTON5))) {
         //send command to move arm down
         send_start_bit();
         send_command(110);
@@ -134,10 +225,10 @@ int main(void) {
 	send_command(109);
       }
       break;
-    } else if (!(command & ((1<<BUTTON1) | (1<<BUTTON2)))) {
-      switch(~(command & (1<<BUTTON1) | (1<<BUTTON2))) {
+    } else if (!(CONTROL_PORT & ((1<<BUTTON1) | (1<<BUTTON2)))) {
+      switch(~(CONTROL_PORT & (1<<BUTTON1) | (1<<BUTTON2))) {
         case (1<<BUTTON1):
-	  if(!(command & (1<<BUTTON3))) {
+	  if(!(CONTROL_PORT & (1<<BUTTON3))) {
 	    //move left motor in reverse
 	    send_start_bit();
 	    send_command(103);
@@ -148,7 +239,7 @@ int main(void) {
 	  };
 	  break;
 	case (1<<BUTTON2):
-	  if(!(command & (1<<BUTTON3))) {
+	  if(!(CONTROL_PORT & (1<<BUTTON3))) {
 	    //move right motor in reverse
 	    send_start_bit();
 	    send_command(102);
@@ -159,7 +250,7 @@ int main(void) {
 	  }
 	  break;
 	case (1<<BUTTON1) | (1<<BUTTON2): 
-	  if(!(command & (1<<BUTTON3))) {
+	  if(!(CONTROL_PORT & (1<<BUTTON3))) {
 	    //move both in reverse
 	    send_start_bit();
 	    send_command(107);
@@ -173,4 +264,4 @@ int main(void) {
   }
 
   return 0;
-}
+}*/

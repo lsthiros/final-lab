@@ -1,7 +1,7 @@
 F_CPU = 16000000
 
 reciever:
-	avr-gcc -mmcu=atmega328p -DF_CPU=$(F_CPU) -O2 -o test.elf ir_transmit.c
+	avr-gcc -std=c99 -mmcu=atmega328p -DF_CPU=$(F_CPU) -O2 -o test.elf ir_transmit.c
 	avr-objcopy -O ihex test.elf test.hex
 	avr-size test.elf
 
@@ -17,4 +17,4 @@ download_linux:
 	avrdude -p m328p -P /dev/ttyACM0 -c arduino -F -u -U flash:w:test.hex
 
 download_windows:
-	avrdude -p m328p -P com3 -c arduino -F -u -U flash:w:test.hex 
+	avrdude -p m328p -P com5 -c arduino -F -u -U flash:w:test.hex 
