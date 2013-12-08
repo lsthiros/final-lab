@@ -142,9 +142,12 @@ void blink() {
 int main(void) {
 	DDRD |= (1<<DEBUG_LED) | (1 << IR_LED_PORT);  //set the IR port pin to output
 	PORTB |= (1<<BUTTON5) | (1<<BUTTON4) | (1<<BUTTON3) | (1<<BUTTON2) | (1<<BUTTON1);
+	PORTD |= (1<<FREQUENCY_SELECT);
+	DDRB |= (1<<5);
 
 	if(!(PIND & (1<<FREQUENCY_SELECT))) {
 		set_frequency_56();
+		PORTB |=(1<<5);
 		blink();
 		blink();
 	} else {
