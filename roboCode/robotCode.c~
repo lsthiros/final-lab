@@ -20,6 +20,24 @@ volatile int timeDelay[NUMBER_OF_EVENTS];
 
 volatile uint32_t msPassed=0;
 
+char receiver_pin=2;
+
+void initialize_receiver(void)
+{
+	//DDRD &= ~(1<<4);//4=button port
+	PORTD |= (1<<4);
+	if(PIND & (1<<4))
+	{
+		receiver_pin=2;//button not pressed
+	}
+	else
+	{
+		receiver_pin=3;
+		PORTB |= (1<<5);//set onborad LED
+	}
+	DDRD &= ~(1<<receiver_pin);
+}
+
 void initialize_motor_variables(void)
 {
 	////////initialization////////
@@ -89,7 +107,7 @@ char getFallingEdge(int usTimeout)
 	while(isFallingEdge==0 && (TCNT0<tcntTimeout || tcntTimeout==0))
 	{
 		b=a;
-		a=(PIND & (1<<PD2));
+		a=(PIND & (1<<receiver_pin));
 		if(b!=0 && a==0)
 		{
 			isFallingEdge=1;
@@ -122,7 +140,7 @@ char getDataBit(void)
 	{
 		return 2;
 	}
-	return !(PIND & (1<<2));//read data bit and flip
+	return !(PIND & (1<<receiver_pin));//read data bit and flip
 }
 
 char getDataBits(void)
@@ -190,9 +208,10 @@ ISR(TIMER1_COMPA_vect)
 
 int main(void)
 {
+	DDRB |= (1<<5);
+	initialize_receiver();
 	initialize_motor_variables();
 	initialize_adc();
-	DDRB |= (1<<5);
 	lab4_initialize_timer0();
 	volatile char remoteData=0;
 	initialize_timer();//this goes last so we don't have to worry about
@@ -215,11 +234,11 @@ int main(void)
 
 			set_motor_speed(0,0);
 		}	
-		if(remoteData==19)//right forwards
+		if(remoteData==104)//right forwards
 		{
 			set_motor_speed(1,100);
 		}
-		if(remoteData==20)//right backwards
+		if(remoteData==105)//right backwards
 		{
 			set_motor_speed(1,-100);
 		}	

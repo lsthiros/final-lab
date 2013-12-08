@@ -171,15 +171,15 @@ int main(void) {
 		if(B1_DOWN)
 		{
 			//send_start_bit();
-			send_command(101);
+			send_command(16);
 		}
 		if(B2_DOWN)
 		{
-			send_command(102);
+			send_command(17);
 		}
 		if(B1_UP && B2_UP)
 		{
-			send_command(103);
+			send_command(18);
 		}
 		if(B3_DOWN)
 		{

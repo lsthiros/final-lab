@@ -221,15 +221,15 @@ int main(void)
 	while(1)
 	{
 		remoteData=getRemoteData();
-		if(remoteData==101)//Left Forwards
+		if(remoteData==16)//Left Forwards
 		{
 			set_motor_speed(0,100);
 		}
-		if(remoteData==102)//left backwards
+		if(remoteData==17)//left backwards
 		{		
 			set_motor_speed(0,-100);
 		}
-		if(remoteData==103)//left stop
+		if(remoteData==18)//left stop
 		{
 
 			set_motor_speed(0,0);
