@@ -147,15 +147,15 @@ char getDataBits(void)
 {
 	char dataByte=0;
 	char i=0;
-	char dataBitArray[7];
+	char dataBitArray;
 	for(i=0;i<7;i++)
 	{
-		dataBitArray[i]=getDataBit();
-		if(dataBitArray[i]==2)
+		dataBitArray=getDataBit();
+		if(dataBitArray==2)
 		{
 			return (1<<7);//failed transmission
 		}
-		dataByte |= (dataBitArray[i]<<i);//stuff dataBit into array
+		dataByte |= (dataBitArray<<i);//stuff dataBit into array
 	}
 	return dataByte;
 }

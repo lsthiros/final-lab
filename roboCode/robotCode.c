@@ -199,10 +199,10 @@ ISR(TIMER1_COMPA_vect)
 		OCR1A += 22000;// ( (20000*2) - ((3000*2) * NUMBER_OF_MOTORS));
 		currentEvent=0;//go back to the beginning
 		msPassed+=20;
-		if(msPassed>=120000)//2 minutes have passed
+		/*if(msPassed>=120000)//2 minutes have passed
 		{
 			while(1){}
-		}
+		}/**/
 	}
 }
 
@@ -224,15 +224,18 @@ int main(void)
 		if(remoteData==16)//Left Forwards
 		{
 			set_motor_speed(0,100);
+			//set_motor_speed(1,100);
 		}
 		if(remoteData==17)//left backwards
 		{		
 			set_motor_speed(0,-100);
+			//set_motor_speed(1,-100);
 		}
 		if(remoteData==18)//left stop
 		{
 
 			set_motor_speed(0,0);
+			//set_motor_speed(1,0);
 		}	
 		if(remoteData==104)//right forwards
 		{
