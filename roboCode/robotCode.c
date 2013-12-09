@@ -231,7 +231,6 @@ int main(void)
 		}
 		if(remoteData==103)//left stop
 		{
-
 			set_motor_speed(0,0);
 		}	
 		if(remoteData==104)//right forwards
