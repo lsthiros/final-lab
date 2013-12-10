@@ -9,13 +9,13 @@
 #include<avr/interrupt.h>
 #include<util/delay.h>
 
-#define IR_LED_PORT PD4
+#define IR_LED_PORT PD2
 #define HIGH_US_38KHZ 7
 #define LOW_US_38KHZ 20
 #define HIGH_US_56KHZ 8
 #define LOW_US_56KHZ 10
 
-#define FREQUENCY_SELECT PD2
+#define FREQUENCY_SELECT PD4
 #define DEBUG_LED PD7
 
 #define BUTTON1 PB0
@@ -166,12 +166,18 @@ int main(void) {
 	//b5 up: 3 up (not yet implemented)
 
 
+	char bstate=B1_DOWN;
+	char bstate1=B2_DOWN;
 	while(1)
 	{
+		if(bstate!=B1_DOWN)
+		{
+			bstate=B1_DOWN;
 		if(B1_DOWN)
 		{
 			//send_start_bit();
 			send_command(16);
+		}
 		}
 		if(B2_DOWN)
 		{
@@ -181,7 +187,7 @@ int main(void) {
 		{
 			send_command(18);
 		}
-		if(B3_DOWN)
+		/*if(B3_DOWN)
 		{
 			send_command(104);
 		}
@@ -192,7 +198,7 @@ int main(void) {
 		if(B3_UP && B4_UP)
 		{
 			send_command(106);
-		}
+		}/**/
 	}
 	return 0;
 }
