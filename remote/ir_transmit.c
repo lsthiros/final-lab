@@ -146,12 +146,12 @@ int main(void) {
 	DDRB |= (1<<5);
 
 	if(!(PIND & (1<<FREQUENCY_SELECT))) {
-		set_frequency_56();
+		set_frequency_38();
 		PORTB |=(1<<5);
 		blink();
 		blink();
 	} else {
-		set_frequency_38();
+		set_frequency_56();
 		blink();
 	}
 
@@ -166,45 +166,49 @@ int main(void) {
 	//b5 up: 3 up (not yet implemented)
 
 
-	char bstate=B1_DOWN;
-	char bstate1=B2_DOWN;
+	char reverse=0;
 	while(1)
 	{
-		if(bstate!=B1_DOWN)
+		if(B3_DOWN)
 		{
-			bstate=B1_DOWN;
-		if(B1_DOWN)
+			reverse=1;
+		}
+		else
 		{
-			//send_start_bit();
-			send_command(16);
+			reverse=0;
 		}
-		}
-		if(B2_DOWN)
-		{
-			send_command(17);
-		}
+
 		if(B1_UP && B2_UP)
 		{
-			send_command(18);
+			//send_start_bit();
+			send_command(101);
 		}
-		/*if(B3_DOWN)
+		if(B1_UP && B2_DOWN)
 		{
-			send_command(104);
+			send_command(102+reverse*3);
 		}
+		if(B1_DOWN && B2_UP)
+		{
+			send_command(103+reverse*3);
+		}
+		if(B1_DOWN && B2_DOWN)
+		{
+			send_command(104+reverse*3);
+		}/*
 		if(B4_DOWN)
 		{
-			send_command(105);
+			send_command(109);
 		}
-		if(B3_UP && B4_UP)
+		if(B4_UP)
 		{
-			send_command(106);
-		}/**/
+			send_command(110);
+		}*/
 	}
 	return 0;
-}
+}/**/
 
 
- /* while(1) {
+/*  while(1) {
     CONTROL_PORT=CONTROL_PORT;
     //returns true for either arm moving button pressed
     if((CONTROL_PORT & (1<<BUTTON4)) == 0 || !(CONTROL_PORT & (1<<BUTTON5))) {
@@ -258,4 +262,4 @@ int main(void) {
   }
 
   return 0;
-}*/
+}/**/
