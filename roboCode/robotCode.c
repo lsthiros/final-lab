@@ -233,9 +233,13 @@ int main(void)
 		}
 		if(remoteData==103)//left forward
 		{
+<<<<<<< HEAD
 
 			set_motor_speed(0,100);
 			set_motor_speed(1,0);
+=======
+			set_motor_speed(0,0);
+>>>>>>> 9e3ff5ea6eefcf7bcea4e940455e1935fb3dca8e
 		}	
 		if(remoteData==104)//both forward
 		{

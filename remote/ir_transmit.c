@@ -155,6 +155,7 @@ int main(void) {
 		blink();
 	}
 
+	/*
 	//command scheme:
 	//B1down: Left forwards
 	//B2down: left backwards
@@ -164,7 +165,7 @@ int main(void) {
 	//b3&b4up: right stop
 	//b5down: 3 down(not yet implemented)
 	//b5 up: 3 up (not yet implemented)
-
+*/
 
 	char reverse=0;
 	while(1)
@@ -205,61 +206,4 @@ int main(void) {
 		}*/
 	}
 	return 0;
-}/**/
-
-
-/*  while(1) {
-    CONTROL_PORT=CONTROL_PORT;
-    //returns true for either arm moving button pressed
-    if((CONTROL_PORT & (1<<BUTTON4)) == 0 || !(CONTROL_PORT & (1<<BUTTON5))) {
-      blink();
-      if(!(CONTROL_PORT & (1<<BUTTON5))) {
-        //send command to move arm down
-        send_start_bit();
-        send_command(110);
-      } else {
-        //send command to move arm up
-	send_start_bit();
-	send_command(109);
-      }
-      break;
-    } else if (!(CONTROL_PORT & ((1<<BUTTON1) | (1<<BUTTON2)))) {
-      switch(~(CONTROL_PORT & (1<<BUTTON1) | (1<<BUTTON2))) {
-        case (1<<BUTTON1):
-	  if(!(CONTROL_PORT & (1<<BUTTON3))) {
-	    //move left motor in reverse
-	    send_start_bit();
-	    send_command(103);
-	  } else {
-	    //move left motor forwards
-	    send_start_bit();
-	    send_command(106);
-	  };
-	  break;
-	case (1<<BUTTON2):
-	  if(!(CONTROL_PORT & (1<<BUTTON3))) {
-	    //move right motor in reverse
-	    send_start_bit();
-	    send_command(102);
-	  } else {
-	    //move right motor forwards
-	    send_start_bit();
-	    send_command(105);
-	  }
-	  break;
-	case (1<<BUTTON1) | (1<<BUTTON2): 
-	  if(!(CONTROL_PORT & (1<<BUTTON3))) {
-	    //move both in reverse
-	    send_start_bit();
-	    send_command(107);
-	  } else {
-	    //move both backwards
-	    send_start_bit();
-	    send_command(104);
-	  }
-      }
-    }
-  }
-
-  return 0;
-}/**/
+}
