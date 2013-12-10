@@ -165,7 +165,7 @@ int main(void) {
 	//b3&b4up: right stop
 	//b5down: 3 down(not yet implemented)
 	//b5 up: 3 up (not yet implemented)
-
+*/
 
 	char reverse=0;
 	while(1)
@@ -184,18 +184,20 @@ int main(void) {
 			//send_start_bit();
 			send_command(101);
 		}
-		if(B1_UP && B2_DOWN)
+		else if(B1_UP && B2_DOWN)
 		{
 			send_command(102+reverse*3);
 		}
-		if(B1_DOWN && B2_UP)
+		else if(B1_DOWN && B2_UP)
 		{
 			send_command(103+reverse*3);
 		}
-		if(B1_DOWN && B2_DOWN)
+		else if(B1_DOWN && B2_DOWN)
 		{
 			send_command(104+reverse*3);
-		}/*
+		}
+		_delay_ms(10);
+		/*
 		if(B4_DOWN)
 		{
 			send_command(109);
@@ -206,62 +208,4 @@ int main(void) {
 		}*/
 	}
 	return 0;
-<<<<<<< HEAD
-}/**/
-
-
-/*  while(1) {
-    CONTROL_PORT=CONTROL_PORT;
-=======
 }
-*/
-
-  while(1) {
->>>>>>> 9e3ff5ea6eefcf7bcea4e940455e1935fb3dca8e
-    //returns true for either arm moving button pressed
-    if(B5_DOWN) {
-      //send command to move arm down
-      send_start_bit();
-      send_command(110);
-    } else if (B4_DOWN) {
-      //send command to move arm up
-      send_start_bit();
-      send_command(109);
-    } else if (B1_DOWN && B2_UP) {
-      if(B3_DOWN) {
-        //move left motor in reverse
-        send_start_bit();
-	send_command(103);
-      } else {
-	//move left motor forwards
-	send_start_bit();
-	send_command(106);
-      };
-    } else if(B1_UP && B2_DOWN) {
-      if(B3_DOWN) {
-        //move right motor in reverse
-        send_start_bit();
-        send_command(102);
-      } else {
-        //move right motor forwards
-	send_start_bit();
-	send_command(105);
-      }
-    } else if(B1_DOWN && B2_UP) {
-      if(!(CONTROL_PORT & (1<<BUTTON3))) {
-        //move both in reverse
-	send_start_bit();
-	send_command(107);
-      } else {
-        //move both backwards
-	send_start_bit();
-	send_command(104);
-      }
-    }
-  }
-  return 0;
-<<<<<<< HEAD
-}/**/
-=======
-}
->>>>>>> 9e3ff5ea6eefcf7bcea4e940455e1935fb3dca8e

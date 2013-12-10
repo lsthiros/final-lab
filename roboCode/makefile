@@ -17,4 +17,4 @@ download_linux:
 	avrdude -p m328p -P /dev/ttyACM0 -c arduino -F -u -U flash:w:robotCode.hex
 
 download_windows:
-	avrdude -p m328p -P com3 -c arduino -F -u -U flash:w:robotCode.hex 
+	avrdude -p m328p -P com6 -c arduino -F -u -U flash:w:robotCode.hex 

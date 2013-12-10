@@ -184,18 +184,20 @@ int main(void) {
 			//send_start_bit();
 			send_command(101);
 		}
-		if(B1_UP && B2_DOWN)
+		else if(B1_UP && B2_DOWN)
 		{
 			send_command(102+reverse*3);
 		}
-		if(B1_DOWN && B2_UP)
+		else if(B1_DOWN && B2_UP)
 		{
 			send_command(103+reverse*3);
 		}
-		if(B1_DOWN && B2_DOWN)
+		else if(B1_DOWN && B2_DOWN)
 		{
 			send_command(104+reverse*3);
-		}/*
+		}
+		_delay_ms(100);
+		/*
 		if(B4_DOWN)
 		{
 			send_command(109);
